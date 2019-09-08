@@ -1,16 +1,13 @@
 #include "Level.h"
 
-using namespace std;
-
-
 
 Level::Level()
 {
 }
 
-void Level::loadLevel(string fileName, Player &player)
+void Level::loadLevel(std::string fileName, Player &player)
 {   // Loads the level
-	ifstream file;
+	std::ifstream file;
 	file.open(fileName);
 	if (file.fail())
 	{
@@ -18,7 +15,7 @@ void Level::loadLevel(string fileName, Player &player)
 		system("PAUSE");
 		exit(1);
 	}
-	string line;
+	std::string line;
 
 	while (getline(file, line))
 	{
@@ -40,33 +37,66 @@ void Level::loadLevel(string fileName, Player &player)
 		{
 			tile = _levelData[i][j];
 
-			switch(tile)
+			switch (tile)
 			{
-			case '@':
-				player.setposition(j,i);
-				break;
-			
-			case 'S'://Snake
-				_enemies.push_back(Enemy("Snake", tile, 50, 5,4,10,5 ));
-				_enemies.back().setposition(j, i);
-				break;
-			case 'G'://Goblin
-				_enemies.push_back(Enemy("Goblin", tile,55, 10,7, 10,10));
-				_enemies.back().setposition(j, i);
-				break;
-			case 'D'://Dragon
-				_enemies.push_back(Enemy("Dragon", tile, 100, 100, 70, 80, 50));
-				_enemies.back().setposition(j, i);
-				break;
-			case 'O'://Ogre
-				_enemies.push_back(Enemy("Ogre", tile, 5, 25, 34, 43, 30));
-				_enemies.back().setposition(j, i);
-				break;
-			case 'B'://Bandit
-				_enemies.push_back(Enemy("Bandit", tile, 3, 40, 12, 120, 20));
-				_enemies.back().setposition(j, i);
-				break;
+				{case '@':
+					player.setposition((int)j, (int)i);
+					break;
+				}
+				{case 'S'://Snake
+					_enemies.push_back(Enemy("Snake", tile, 50, 5, 4, 10, 5));
+					_enemies.back().setposition(static_cast<int>(j), static_cast<int>(i));
+					break;
+				}
+				{case 'G'://Goblin
+					_enemies.push_back(Enemy("Goblin", tile, 55, 10, 7, 10, 10));
+					_enemies.back().setposition(static_cast<int>(j), static_cast<int>(i));
+					break;
+				}
+				{case 'D'://Dragon
+					_enemies.push_back(Enemy("Dragon", tile, 100, 100, 70, 80, 50));
+					_enemies.back().setposition(static_cast<int>(j), static_cast<int>(i));
+					break;
+				}
+				{case 'O'://Ogre
+					_enemies.push_back(Enemy("Ogre", tile, 5, 25, 34, 43, 30));
+					_enemies.back().setposition(int(j),int(i));
+					break;
+				}
+				{case 'B'://Bandit
+					_enemies.push_back(Enemy("Bandit", tile, 3, 40, 12, 120, 20));
+					_enemies.back().setposition(int(j),int(i));
+					break;
+				}
+				{case '^'://Chemist Shop
+					std::vector<Items> chemistitems = { {"Health Potion",100,20},
+														{"Attack Potion",240,40},
+														{"Exp Potion", 200, 20} 
+					};
+					_shops.emplace_back(Shop("The Alchemist", 1000, chemistitems));
+					_shops.back().setposition(int(j), int(i));
+					break;
+				}
+				{case '~'://Food Shop
+					std::vector<Items> fooditems = { {"Burger",100,20},
+													 {"Pizza",50,120 },
+													 {"Fish",30,400 }
+					};
+					_shops.emplace_back(Shop("Food Paradise", 1200, fooditems));
+					_shops.back().setposition(int(j), int(i));
+					break;
+				}
+				{case '<'://Weapon Shop
+					std::vector<Items> weapons = { {"Silver Sword",100,200},
+													{"Bronze Sword",50,120 },
+													{"Iron Armor",30,400 }
+					};
+					_shops.emplace_back(Shop("Weapons Shop", 2000, weapons));
+					_shops.back().setposition(int(j), int(i));
+					break;
+				}
 			}
+			
 
 
 		}
@@ -76,18 +106,16 @@ void Level::loadLevel(string fileName, Player &player)
 }
 
 //using namespace std;
-void Level::print(Player player)
+void Level::print(Player& player) const
 {
 	system("cls");
-	cout << "\t\t\t\t\t\t*******Player Stats*********\n health :"<<player._health<<"\t\tlevel :"
-		<<player._level<<"\t\tAttack :" << player._attack<<"\t\t Defence :"
-		<< player._defence<< "\t\tExperience :"<<player._experience<<endl  ;
+	player.printPlayer();
 
 	for (size_t i = 0; i < _levelData.size(); i++)
 	{
-		cout << _levelData[i].c_str() << endl;
+		std::cout << _levelData[i].c_str() << std::endl;
 	}
-	 cout << endl;
+	std::cout << std::endl;
 	
 }
 
@@ -114,15 +142,20 @@ void Level::movePlayer(char input, Player &player)
 	case 'D':
 		processPlayerMove(player, playerX + 1, playerY);
 		break;
-
+	case 'q':
+		player.healthPotion();
+		break;
+	case 'r':
+		player.attackPotion();
 	default:
-		cout << " invalid input\n";
+		std::cout << " invalid input\n";
 		system("PAUSE");
 		break;
 	}
 
 }
-char Level::getTile(int x, int y)
+
+char Level::getTile(int x, int y) const
 {
 	return _levelData[y][x];
 
@@ -144,21 +177,34 @@ void Level::processPlayerMove(Player &player, int targetX, int targetY)
 
 	switch (moveTile)
 	{
-	case '#':
-		cout << "You ran into a wall\n";
-		system("PAUSE");
-		break;
-	case '.':
-		player.setposition(targetX,targetY);
-		setTile(playerX, playerY, '.');
-		setTile(targetX, targetY, '@');
-		break;
-	/*case '#':
-		cout << "you ran into a wall";
-		break;*/
-	default:
-		battleMonster(player,targetX,targetY);
-		break;
+		{case '#':
+			std::cout << "You ran into a wall\n";
+			system("PAUSE");
+			break; }
+		{case '.':
+			player.setposition(targetX, targetY);
+			setTile(playerX, playerY, '.');
+			setTile(targetX, targetY, '@');
+			break; }
+		{case '^': // Chemist Shop
+			auto it = getShop(_shops,"The Alchemist");
+			shopEnter(player, *it);
+			break;
+		}
+		{case '~': // Food Shop
+			auto it = getShop(_shops, "Food Paradise");
+			shopEnter(player, *it);
+			break;
+		}
+		{case '<'://Weapon Shop
+			auto it = getShop(_shops, "Weapons Shop");
+			shopEnter(player, *it);
+			break;
+		}
+		{default:
+			battleMonster(player, targetX, targetY);
+			break;
+		}
 	}
 }
 
@@ -170,7 +216,7 @@ void Level::battleMonster(Player &player, int targetX, int targetY)
 	int playerY;
 	int attackRoll;
 	int attackResult;
-	string enemyName;
+	std::string enemyName;
 	
 	player.getposition(playerX, playerY);
 	for (size_t i = 0; i < _enemies.size(); i++)
@@ -181,13 +227,17 @@ void Level::battleMonster(Player &player, int targetX, int targetY)
 		{
 			//Battle
 			attackRoll = player.attack();
-			cout << "\nPlayer attacked monster "<<enemyName <<" with a roll of " << attackRoll<<endl;
+			system("cls");
+			print(player);
+			_enemies[i].printStats();
+			system("PAUSE");
+			std::cout << "\nPlayer attacked monster "<<enemyName <<" with a roll of " << attackRoll<< std::endl;
 			attackResult=_enemies[i].takeDamage(attackRoll);
 			if (attackResult != 0)
 			{
 				setTile(targetX, targetY, '.');
 				print(player);
-				cout << "Monster died\n";
+				std::cout << "Monster died\n";
 				auto it = _enemies.begin();
 				it += i;
 				_enemies.erase(it);
@@ -198,7 +248,7 @@ void Level::battleMonster(Player &player, int targetX, int targetY)
 				if (_enemies.size() == 0)
 				{
 					system("cls");
-					cout << "\n\n\n\t\t\t\t\n\n\n\n\t\t\n\t\n\tYou Won ";
+					std::cout << "\n\n\n\t\t\t\t\n\n\n\n\t\t\n\t\n\tYou Won ";
 					system("PAUSE");
 					exit(0);
 
@@ -207,13 +257,13 @@ void Level::battleMonster(Player &player, int targetX, int targetY)
 			}
 			//Monster's turn
 			attackRoll = _enemies[i].attack();
-			cout << "\nMonster " << enemyName << "attacked you with a roll of "<<attackRoll<<endl;
+			std::cout << "\nMonster " << enemyName << "attacked you with a roll of "<<attackRoll<< std::endl;
 			attackResult = player.takeDamage(attackRoll);
 			if (attackResult != 0)
 			{
 				setTile(playerX, playerY, 'x');
 				print(player);
-				cout << "You died\n";
+				std::cout << "You died\n";
 				system("PAUSE");
 				exit(0);
 			}
@@ -286,6 +336,71 @@ void Level::processEnemyMove(Player &player, int enemyIndex, int targetX, int ta
 		break;
 	}
 }
+
+
+
+void Level::shopEnter(Player& player, Shop& shop)
+{
+	system("cls");
+	std::cout << "\n\n";
+	shop.printShop();
+	char input ='a';
+	while (input != 'q')
+	{
+		system("cls");
+		player.printPlayer();
+		shop.printShop();
+		std::cout << "\n\nPress B/b to buy\nPress Q/q to quit\n";
+		std::cin >> input;
+		if (input == 'b' || input == 'B')
+		{
+			std::cin.ignore(1, '\n');
+			std::string item;
+			std::cout << "Enter Name of the item\n\n";
+			std::getline(std::cin, item);
+			auto it = shop.Find(item);
+			if (it == _shops[getShopIndex(shop)].returnItemEnd())
+			{
+				return;
+			}
+			int itemcost = it->getvalue();
+			if (player.canAfford(itemcost))
+
+			{
+				auto it = shop.Find(item);
+				player.addItem(*it);
+				shop.sellItem(it);
+			}
+			else
+			{
+				std::cout << "Too Expensive";
+			}
+		}
+	}
+}
+
+
+std::vector<Shop>::iterator Level::getShop(std::vector<Shop>& shop, std::string shopName)const
+{
+	for (auto it = shop.begin(); it!=shop.end(); it++)
+	{
+		if (it->getName() == shopName)
+			return it;
+	}
+}
+
+int Level::getShopIndex(Shop& shop) const
+{
+	int i = 0;
+	for (Shop s : _shops)
+	{
+		if (s.getName() == shop.getName())
+			return i;
+		i++;
+	}
+	return -1;
+}
+
 
 
 /*void Level::ShowLevel()

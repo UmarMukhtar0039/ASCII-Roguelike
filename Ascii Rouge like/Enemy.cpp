@@ -3,9 +3,8 @@
 #include<ctime>
 #include <string>
 
-using namespace std;
 
-Enemy::Enemy(string name, char tile, int level, int attack, int defence, int health, int xp)
+Enemy::Enemy(std::string name, char tile, int level, int attack, int defence, int health, int xp)
 {
 	_level = level;
 	_name = name;
@@ -33,8 +32,8 @@ void Enemy::getposition(int &x, int &y)
 
 int Enemy::attack()
 {
-	static default_random_engine radomEngine(unsigned int(time(NULL)));
-	uniform_int_distribution<int> attackRoll(0, _attack);
+	static std::default_random_engine radomEngine(unsigned int(time(NULL)));
+	std::uniform_int_distribution<int> attackRoll(0, _attack);
 
 	return attackRoll(radomEngine);
 }
@@ -57,8 +56,8 @@ int Enemy::takeDamage(int attack)
 
 char Enemy::getMove(int playerX,int playerY)
 {
-	static default_random_engine randomEngine(unsigned int(time(nullptr)));
-	uniform_int_distribution<int> moveRoll(0,6);
+	static std::default_random_engine randomEngine(unsigned int(time(nullptr)));
+	std::uniform_int_distribution<int> moveRoll(0,6);
 	int distance;
 	int dx = _x - playerX;
 	int dy = _y - playerY;
@@ -99,4 +98,12 @@ char Enemy::getMove(int playerX,int playerY)
 			return '.';
 	
 	}
+}
+
+void Enemy::printStats()const
+{
+	std::cout << "Fighting " << _name << "\nAttack Power:" << _attack 
+		<< " Health:" << _health
+		<< " Defence:" << _defence<<std::endl;
+              
 }
