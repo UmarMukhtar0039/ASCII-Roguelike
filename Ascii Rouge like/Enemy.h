@@ -9,7 +9,7 @@ class Enemy : public Character
 {
 public:
 
-		Enemy(std::string name, char tile, int level, int attack, int defence, int health, int xp);
+		Enemy(std::string&& name, char tile, int level, int attack, int defence, int health, int xp);
 		char getTile()const { return _tile; }
 		//Get AI move command
 		char getMove(int playerX, int playerY);

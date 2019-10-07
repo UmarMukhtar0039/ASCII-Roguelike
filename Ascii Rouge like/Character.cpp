@@ -3,10 +3,10 @@
 #include<ctime>
 
 
-Character::Character(std::string name, int level, int attack, int defence, int health, int xp)
-	:_level(level),_attack(attack),_defence(defence),_health(health),_experience(xp)
+Character::Character(std::string&& name, int level, int attack, int defence, int health, int xp)
+	: Entity(std::move( name),0,0),
+	_level(level),_attack(attack),_defence(defence),_health(health),_experience(xp)
 {
-	_name = name;
 }
 
 int Character::attack()

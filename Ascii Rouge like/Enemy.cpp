@@ -2,8 +2,8 @@
 #include <string>
 
 
-Enemy::Enemy(std::string name, char tile, int level, int attack, int defence, int health, int xp)
-	:Character(name,level,attack,defence,health,xp)
+Enemy::Enemy(std::string&& name, char tile, int level, int attack, int defence, int health, int xp)
+	:Character(std::move(name),level,attack,defence,health,xp)
 {
 	//_level = level;
 	_tile = tile;

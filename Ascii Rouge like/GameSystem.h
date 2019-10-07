@@ -7,7 +7,7 @@
 class GameSystem
 {
 public:
-	GameSystem(std::string levelFile,std::string);
+	GameSystem(std::string&& levelFile,std::string&&);
 	void playerMove();
 	void PlayGame();
 

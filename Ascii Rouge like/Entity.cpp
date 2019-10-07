@@ -2,11 +2,10 @@
 
 
 
-
-
-Entity::Entity()
-	:_x(0),_y(0),_name("none")
+Entity::Entity(std::string&& name,int x,int y)
+	:_name(std::move(name)),_x(x),_y(y)
 {
+
 }
 
 void Entity::setposition(int x, int y)

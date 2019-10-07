@@ -6,8 +6,15 @@
 class Shop : public Entity
 {
 public:
-	Shop(std::string name, int money, std::vector<Items>);
-	Shop() { _Smoney = 0; };
+	Shop(std::string&& name, int money, std::vector<Items>&&);
+	Shop():Entity(std::string("none")) { _Smoney = 0; };
+	Shop(Shop&& rhs)noexcept :Entity(std::move(rhs._name)), 
+		_Smoney(rhs._Smoney), _SInventory(std::move(rhs._SInventory)){ }
+	Shop& operator=(Shop&& rhs) noexcept{
+		_Smoney = rhs._Smoney; 
+		_SInventory = std::move(rhs._SInventory);
+		return *this;
+	}
 	~Shop();
 	
 	//Shop(Shop&& rhs)  ;

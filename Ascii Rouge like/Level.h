@@ -13,7 +13,7 @@ class Level
 {
 public:
 	Level();
-	void loadLevel(std::string fileName,Player &player);
+	void loadLevel(std::string&& fileName,Player &player);
 	void movePlayer(char input, Player &player);
 	void print(Player& player)const;
 	char getTile(int x,int y)const;

@@ -2,11 +2,11 @@
 #include<conio.h>
 
 
-GameSystem::GameSystem(std::string levelFile, std::string PlayerName)
+GameSystem::GameSystem(std::string&& levelFile, std::string&& PlayerName)
 :
-_player(PlayerName, 3, 100, 70, 10, 0, 200)
+_player(std::move(PlayerName), 3, 100, 70, 10, 0, 200)
 {	
-	_level.loadLevel(levelFile,_player);
+	_level.loadLevel(std::move(levelFile),_player);
 }
 
 

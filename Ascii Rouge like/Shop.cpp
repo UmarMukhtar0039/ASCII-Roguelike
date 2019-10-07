@@ -2,10 +2,10 @@
 #include<iostream>
 
 
-Shop::Shop(std::string name, int money, std::vector<Items> list)
-	:_Smoney(money), _SInventory(list)
+Shop::Shop(std::string&& name, int money, std::vector<Items>&& list)
+	:Entity(std::move(name),0, 0)
+	,_Smoney(money),_SInventory(std::move(list))
 {
-	_name = name;
 }
 
 

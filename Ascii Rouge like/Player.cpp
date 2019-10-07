@@ -4,8 +4,8 @@
 
 #include "Player.h"
 
-Player::Player(std::string name, int level, int health, int attack, int defence, int experience, int money)
-	:Character(name,level, attack,defence,health,experience)
+Player::Player(std::string&& name, int level, int health, int attack, int defence, int experience, int money)
+	:Character(std::move(name),level, attack,defence,health,experience)
 {
 	_money = 200;
 	Items item("Bronze Sword", 20, 1);
@@ -24,8 +24,11 @@ void Player::addExperience(int experience)
 		_experience -= 20;
 		_attack += 10;
 		_defence += 5;
-		_health += 10;
+		if (10 + _health < 100)
+			_health += 10;
+		else _health = 100;
 		_level++;
+		_money += _level*5;
 		std::cout<< std::endl;
 		system("PAUSE");
 	}
@@ -112,3 +115,30 @@ void Player::attackPotion()
 	input = _getwch();
 	std::cout.flush();
 }
+
+void Player::EquipSword()
+{
+	std::cout << "sword Equipped";
+	_attack += 40;
+	swordisequip = true;
+}
+
+void Player::UnEquipSword()
+{
+	std::cout << "sword UnEquipped";
+	_attack -= 40;
+	swordisequip = false;
+}
+
+bool Player::searchInventory(const std::string& ItemName)
+{
+	for (Items const& i : playerinventory)
+	{
+		if (i.getItem() == ItemName)
+			return true;
+	}
+	return false;
+}
+
+
+bool Player::swordisequip = false;

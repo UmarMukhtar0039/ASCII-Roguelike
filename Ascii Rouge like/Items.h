@@ -4,8 +4,19 @@
 class Items
 {
 public:
-	Items(std::string, int, int);
+	Items(std::string&&, int, int);
 	Items() :Items("none", 0, 0) {} // ctor delegation
+	Items(Items&& rhs)noexcept : _ItemName(std::move(rhs._ItemName)),
+		_ItemValue(rhs._ItemValue),_ItemCount(rhs._ItemCount){}
+	Items(const Items& rhs): _ItemName(rhs._ItemName),
+		_ItemValue(rhs._ItemValue), _ItemCount(rhs._ItemCount) {}
+	Items& operator=(const Items& rhs)
+	{
+		_ItemName = rhs._ItemName;
+		_ItemValue = rhs._ItemValue;
+		_ItemCount = rhs._ItemCount;
+		return *this;
+	}
 	~Items();
 private:
 	std::string _ItemName;

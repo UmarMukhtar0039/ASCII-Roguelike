@@ -5,7 +5,7 @@ Level::Level()
 {
 }
 
-void Level::loadLevel(std::string fileName, Player &player)
+void Level::loadLevel(std::string&& fileName, Player &player)
 {   // Loads the level
 	std::ifstream file;
 	file.open(fileName);
@@ -62,11 +62,11 @@ void Level::loadLevel(std::string fileName, Player &player)
 					break;
 				}
 				{case '^'://Chemist Shop
-					std::vector<Items> chemistitems = { {"Health Potion",100,20},
-														{"Attack Potion",240,40},
-														{"Exp Potion", 200, 20} 
-					};
-					_shops.emplace_back(Shop("The Alchemist", 1000, chemistitems));
+					std::vector<Items> chemistitems; 
+					chemistitems.emplace_back("Health Potion", 100, 20);
+					chemistitems.emplace_back("Attack Potion", 240, 40);
+					chemistitems.emplace_back("Exp Potion", 200, 20);
+					_shops.emplace_back("The Alchemist", 1000, std::move(chemistitems));
 					_shops.back().setposition(int(j), int(i));
 					break;
 				}
@@ -75,16 +75,17 @@ void Level::loadLevel(std::string fileName, Player &player)
 													 {"Pizza",50,120 },
 													 {"Fish",30,400 }
 					};
-					_shops.emplace_back(Shop("Food Paradise", 1200, fooditems));
+					_shops.emplace_back("Food Paradise", 1200, std::move(fooditems));
 					_shops.back().setposition(int(j), int(i));
 					break;
 				}
 				{case '<'://Weapon Shop
-					std::vector<Items> weapons = { {"Silver Sword",100,200},
-													{"Bronze Sword",50,120 },
-													{"Iron Armor",30,400 }
-					};
-					_shops.emplace_back(Shop("Weapons Shop", 2000, weapons));
+					std::vector<Items> weapons; 
+					weapons.emplace_back("Silver Sword", 100, 200);
+					weapons.emplace_back("Bronze Sword", 50, 120);
+					weapons.emplace_back("Iron Armor", 30, 400);
+				
+					_shops.emplace_back("Weapons Shop", 2000, std::move(weapons));
 					_shops.back().setposition(int(j), int(i));
 					break;
 				}
@@ -98,7 +99,6 @@ void Level::loadLevel(std::string fileName, Player &player)
 
 }
 
-//using namespace std;
 void Level::print(Player& player) const
 {
 	system("cls");
@@ -114,6 +114,8 @@ void Level::print(Player& player) const
 
 void Level::movePlayer(char input, Player &player)
 {
+	bool EquipItem = player.searchInventory("Silver Sword");
+
 	int playerX;
 	int playerY;
 	player.getposition(playerX, playerY);
@@ -140,6 +142,14 @@ void Level::movePlayer(char input, Player &player)
 		break;
 	case 'r':
 		player.attackPotion();
+		break;
+	case 'e':
+	case 'E':
+		if (Player::swordisequip == false && EquipItem)
+		player.EquipSword();
+	else if (Player::swordisequip == true && EquipItem)
+		player.UnEquipSword();
+		break;
 	default:
 		std::cout << " invalid input\n";
 		system("PAUSE");
@@ -162,12 +172,12 @@ void Level::setTile(int x, int y, char tile)
 
 
 void Level::processPlayerMove(Player &player, int targetX, int targetY)
-{
+{	
 	int playerX;
 	int playerY;
 	player.getposition(playerX, playerY);
 	char moveTile = getTile(targetX, targetY);
-
+	
 	switch (moveTile)
 	{
 		{case '#':
