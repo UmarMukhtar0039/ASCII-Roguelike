@@ -3,11 +3,13 @@
 #include"GameSystem.h"
 #include"Level.h"
 
-using namespace std;
 
 int main()
 {
-	GameSystem gamesystem("LEVEL.txt");
+	std::string Pname;
+	std::cout << "Enter Thy Name:";
+	std::getline(std::cin, Pname);
+	GameSystem gamesystem("LEVEL.txt",std::move(Pname));
 
 	gamesystem.PlayGame();
 //	cout << typeid(l1).name();

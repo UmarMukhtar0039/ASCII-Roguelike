@@ -1,58 +1,17 @@
 #include "Enemy.h"
-#include<random>
-#include<ctime>
 #include <string>
 
 
 Enemy::Enemy(std::string name, char tile, int level, int attack, int defence, int health, int xp)
+	:Character(name,level,attack,defence,health,xp)
 {
-	_level = level;
-	_name = name;
+	//_level = level;
 	_tile = tile;
-	_attack = attack;
-	_defence = defence;
-	_health = health;
-	_experienceValue = xp;
+	//_attack = attack;
+	//_defence = defence;
+	//_health = health;
 
 }
-
-void Enemy::setposition(int x, int y)
-{
-	_x = x;
-	_y = y;
-}
-
-void Enemy::getposition(int &x, int &y)
-{
-	x = _x;
-	y = _y;
-}
-
-
-
-int Enemy::attack()
-{
-	static std::default_random_engine radomEngine(unsigned int(time(NULL)));
-	std::uniform_int_distribution<int> attackRoll(0, _attack);
-
-	return attackRoll(radomEngine);
-}
-
-int Enemy::takeDamage(int attack)
-{
-	attack -= _defence;
-	//check if attack does damage
-	if (attack > 0)
-	{
-		_health -= attack;
-		//to cheak if he died
-		if (_health <= 0)
-			return _experienceValue;
-		
-	}
-	return 0;
-}
-
 
 char Enemy::getMove(int playerX,int playerY)
 {

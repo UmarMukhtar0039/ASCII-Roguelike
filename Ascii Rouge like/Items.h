@@ -5,7 +5,7 @@ class Items
 {
 public:
 	Items(std::string, int, int);
-	Items() { _ItemName = "none"; _ItemCount = 0; _ItemValue = 0; };
+	Items() :Items("none", 0, 0) {} // ctor delegation
 	~Items();
 private:
 	std::string _ItemName;

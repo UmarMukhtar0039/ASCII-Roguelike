@@ -21,7 +21,7 @@ public:
 	void updateEnemies(Player &player);
 	void shopEnter(Player&, Shop&);
 	std::vector<Shop>::iterator getShop(std::vector<Shop>& shop, std::string shopName)const;
-	int getShopIndex(Shop& shop)const;
+	int getShopIndex(const Shop& shop)const;
 	
 
 private:

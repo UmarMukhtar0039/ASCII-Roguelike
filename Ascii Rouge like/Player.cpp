@@ -4,51 +4,14 @@
 
 #include "Player.h"
 
-Player::Player()
+Player::Player(std::string name, int level, int health, int attack, int defence, int experience, int money)
+	:Character(name,level, attack,defence,health,experience)
 {
-	_x = 0;
-	_y = 0;
-	_level = 1;
-	_health = 0;
-	_attack = 0;
-	_defence = 0;
-	_experience = 0;
 	_money = 200;
+	Items item("Bronze Sword", 20, 1);
+	playerinventory.emplace_back(std::move(item));
 }
 
-void Player::init(std::string name,int level, int health, int attack, int defence, int experience,int money)
-{
-	_name = name;
-	_level = level;
-	_health = health;
-	_attack = attack;
-	_defence = defence;
-	_experience = experience;
-	_money = money;
-	playerinventory.emplace_back(Items("Bronze Sword",20, 1));
-}
-
-
-void Player::setposition(int x, int y)
-{
-	_x = x;
-	_y = y;
-}
-
-void Player::getposition(int &x, int &y) const
-{
-	x = _x;
-	y = _y;
-}
-
-
-int Player::attack()
-{
-	static std::default_random_engine radomEngine(unsigned int(time(NULL)));
-	std::uniform_int_distribution<int> attackRoll(0, _attack);
-
-	return attackRoll(radomEngine);
-}
 
 
 void Player::addExperience(int experience)
@@ -69,25 +32,11 @@ void Player::addExperience(int experience)
 
 }
 
-int Player::takeDamage(int attack)
-{
-	attack -= _defence;
-	//check if attack does damage
-	if (attack > 0)
-	{
-		_health -= attack;
-		if (_health <= 0)
-			return 1;
-		//to cheak if he died
-	}
-	return 0;
-}
-
 void Player::printPlayer()
 {
 	std::cout << "\t\t\t\t\t\t*******Player Stats*********\n " 
 		<< _name << "'s Inventory:\n";
-	for (Items i : playerinventory)
+	for (Items& i : playerinventory)
 		{
 			std::cout << i;
 		}
@@ -101,7 +50,7 @@ void Player::printPlayer()
 
 
 
-bool Player::canAfford(int cost)
+bool Player::canAfford(int cost) const
 {
 	if (cost > _money)
 		return false;
@@ -130,26 +79,28 @@ void Player::addItem(Items item)
 
 void Player::healthPotion()
 {
-	for (Items i : playerinventory)
+	for (Items& i : playerinventory)
 	{
-		if (i.getItem() == "Health Potion")
+		if (i.getItem() == "Health Potion" && i.getcount() > 0)
 		{	
-			addHealth();
-			i.setcount(i.getcount()-1) ;		
-			return;
+			if (_health < 70) {
+				_health += 20;
+				i.setcount(i.getcount() - 1);
+				return;
+			}
 		}
 	}
-	std::cout << "No Health Potion\n";
-	wint_t input;
-	input = _getwch();
+	//std::cout << "No Health Potion\n";
+	//wint_t input;
+	//input = _getwch();
 	std::cout.flush();
 }
 
 void Player::attackPotion()
 {
-	for (Items i : playerinventory)
+	for (Items& i : playerinventory)
 	{
-		if (i.getItem() == "Attack Potion")
+		if (i.getItem() == "Attack Potion" && i.getcount() > 0)
 		{
 			_attack += 20;
 			i.setcount(i.getcount() - 1);
@@ -160,15 +111,4 @@ void Player::attackPotion()
 	wint_t input;
 	input = _getwch();
 	std::cout.flush();
-}
-
-
-void Player::addHealth()
-{
-	if (_health < 70)
-	{
-		_health += 20;
-	}
-	else
-		std::cout << "Health is enough";
 }

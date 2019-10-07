@@ -22,13 +22,6 @@ void Level::loadLevel(std::string fileName, Player &player)
 		_levelData.emplace_back(line);
 	}
 	
-	/*char ch;
-	file>>ch;
-	while (!file.eof())
-	{
-		cout << ch;
-		file.get(ch);
-	}*/
 	//Process the level
 	char tile;
 	for (size_t i = 0; i < _levelData.size(); i++)
@@ -389,10 +382,10 @@ std::vector<Shop>::iterator Level::getShop(std::vector<Shop>& shop, std::string 
 	}
 }
 
-int Level::getShopIndex(Shop& shop) const
+int Level::getShopIndex(const Shop& shop) const
 {
 	int i = 0;
-	for (Shop s : _shops)
+	for (Shop const& s : _shops)
 	{
 		if (s.getName() == shop.getName())
 			return i;
@@ -400,29 +393,3 @@ int Level::getShopIndex(Shop& shop) const
 	}
 	return -1;
 }
-
-
-
-/*void Level::ShowLevel()
-{
-	ifstream fin;
-	int i = 0, j = 0;
-//	ifstream fin;
-	fin.open("Level.txt");
-	char **ch= new char*[15];
-//	char ch;
-//	fin.get(ch);
-	
-	for(;!fin.eof();)
-	{  
-		for(;;j++)
-		  fin >> ch[i][j];
-		i++;
-	}
-/*	while (!fin.eof())
-	{
-		cout << ch;
-		ch = fin.get();
-	}*/
-	//fin.close();
-//}

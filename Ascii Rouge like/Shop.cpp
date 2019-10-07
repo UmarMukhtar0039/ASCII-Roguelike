@@ -2,11 +2,10 @@
 #include<iostream>
 
 
-Shop::Shop(std::string name, int money, std::vector<Items>& list)
-	:_Sname(name), _Smoney(money), _SInventory(list)
+Shop::Shop(std::string name, int money, std::vector<Items> list)
+	:_Smoney(money), _SInventory(list)
 {
-	_x = 0;
-	_y = 0;
+	_name = name;
 }
 
 
@@ -18,7 +17,7 @@ Shop::~Shop()
 
 void Shop::printShop()const 
 {
-	std::cout <<"\nWelcome to "<< _Sname << "\n\nItems Available:\n";
+	std::cout <<"\nWelcome to "<< _name << "\n\nItems Available:\n";
 	for (Items i : _SInventory)
 		std::cout << i ;
 }
@@ -46,18 +45,4 @@ void Shop::sellItem(std::vector<Items>::iterator item)
 	{
 		_SInventory.erase(item);
 	}
-}
-
-
-
-void Shop::setposition(int x, int y)
-{
-	_x = x;
-	_y = y;
-}
-
-void Shop::getposition(int& x, int& y)
-{
-	x = _x;
-	y = _y;
 }
