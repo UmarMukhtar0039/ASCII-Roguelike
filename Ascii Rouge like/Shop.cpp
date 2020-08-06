@@ -1,6 +1,6 @@
 #include "Shop.h"
 #include<iostream>
-
+#include<string>
 
 Shop::Shop(std::string&& name, int money, std::vector<Items>&& list)
 	:Entity(std::move(name),0, 0)
@@ -16,8 +16,8 @@ Shop::~Shop()
 
 
 void Shop::printShop()const 
-{
-	std::cout <<"\nWelcome to "<< _name << "\n\nItems Available:\n";
+{	
+	std::cout <<"\nWelcome to " <<_name << "\n\nItems Available:\n";
 	for (Items i : _SInventory)
 		std::cout << i ;
 }

@@ -1,6 +1,7 @@
 #include <random>
 #include<ctime>
 #include<iostream>
+#include<string>
 
 #include "Player.h"
 
@@ -37,8 +38,7 @@ void Player::addExperience(int experience)
 
 void Player::printPlayer()
 {
-	std::cout << "\t\t\t\t\t\t*******Player Stats*********\n " 
-		<< _name << "'s Inventory:\n";
+	std::cout << "\t\t\t\t\t\t*******Player Stats*********\n " << _name << "s Inventory:\n";
 	for (Items& i : playerinventory)
 		{
 			std::cout << i;
